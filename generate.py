@@ -99,9 +99,8 @@ row = [{'prompt': None, 'seeds': None, 'model': None, 'prompt_source': None,
         ]
 
 print(rank_batches_index)
-for cnt, mini_batch_idx in enumerate(tqdm.tqdm(rank_batches_index, unit='batch', disable=(dist.get_rank() != 0))):
-    mini_batch_idx = mini_batch_idx[0]
-    mini_batch = rank_batches[mini_batch_idx]
+for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(dist.get_rank() != 0))):
+    mini_batch_idx = rank_batches_index[cnt]
     text = list(mini_batch)
     new_row = copy.deepcopy(row)
     new_row[0]['prompt'] = text[0]
