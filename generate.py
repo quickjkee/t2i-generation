@@ -99,7 +99,7 @@ else:
 ## generate images ##
 client = YtClient(proxy="hahn", token=get_yt_token())
 path = client.TablePath("//home/yr/quickjkee/sdxl_coco", append=True)
-if dist.rank() == 0:
+if dist.get_rank() == 0:
     client.create_table(path, recursive=True, ignore_existing=True)
 dist.barrier()
 
