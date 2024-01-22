@@ -11,6 +11,7 @@ import pandas as pd
 import argparse
 import dist_util as dist
 import numpy as np
+import random
 import tqdm
 from nirvana_utils import copy_out_to_snapshot
 import time
@@ -63,6 +64,7 @@ for k, v in sorted(vars(args).items()):
 ###################
 
 all_text = get_prompts(args)
+random.shuffle(all_text)
 all_text = all_text[: args.max_cnt]
 pipe, refiner = get_t2i_model(args)
 

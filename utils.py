@@ -12,7 +12,7 @@ def get_prompts(args):
         df = pd.read_csv('./prompts/coco.csv')
         all_text = list(df['caption'])
     elif args.dataset == 'coco_train':
-        df = pd.read_csv('./prompts/train2014.csv')
+        df = pd.read_csv('./prompts/train2014_50k.csv')
         all_text = list(df['caption'])
     elif args.dataset == 'laion':
         df = pd.read_csv('./prompts/laion.csv')
