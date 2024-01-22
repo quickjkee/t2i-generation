@@ -96,15 +96,16 @@ row = [{'prompt': None, 'seeds': None, 'model': None, 'prompt_source': None,
          'image_6': None, 'image_7': None, 'image_8': None, 'image_9': None, 'image_10': None}
         ]
 
-for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(dist.get_rank() != 0))):
+for cnt, mini_batch_idx in enumerate(tqdm.tqdm(rank_batches_index, unit='batch', disable=(dist.get_rank() != 0))):
+    mini_batch = rank_batches[mini_batch_idx]
     text = list(mini_batch)
     new_row = copy.deepcopy(row)
     new_row[0]['prompt'] = text[0]
     new_row[0]['model'] = args.name
     new_row[0]['prompt_source'] = args.dataset
 
-    for it, seed in enumerate(range(cnt * 10, cnt * 10 + 10)):
-        new_row[0]['seeds'] = [list(range(cnt * 10, cnt * 10 + 10))]
+    for it, seed in enumerate(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10)):
+        new_row[0]['seeds'] = [list(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10))]
         generator = torch.Generator().manual_seed(seed)
         image = pipe(
             text,
