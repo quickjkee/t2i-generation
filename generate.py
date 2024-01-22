@@ -91,7 +91,7 @@ else:
 ## generate images ##
 client = YtClient(proxy="hahn")
 path = yt.TablePath("//home/yr/quickjkee/sdxl_coco", append=True, client=client)
-row = [{'prompt': None, 'seeds': None, 'model': None,
+row = [{'prompt': None, 'seeds': None, 'model': None, 'prompt_source': None,
          'image_1': None, 'image_2': None, 'image_3': None, 'image_4': None, 'image_5': None,
          'image_6': None, 'image_7': None, 'image_8': None, 'image_9': None, 'image_10': None}
         ]
@@ -101,6 +101,7 @@ for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(
     new_row = copy.deepcopy(row)
     new_row[0]['prompt'] = text[0]
     new_row[0]['model'] = args.name
+    new_row[0]['prompt_source'] = args.dataset
 
     for it, seed in enumerate(range(cnt * 10, cnt * 10 + 10)):
         new_row[0]['seeds'] = [list(range(cnt * 10, cnt * 10 + 10))]
