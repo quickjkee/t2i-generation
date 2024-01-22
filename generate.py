@@ -98,17 +98,26 @@ row = [{'prompt': None, 'seeds': None, 'model': None, 'prompt_source': None,
          'image_6': None, 'image_7': None, 'image_8': None, 'image_9': None, 'image_10': None}
         ]
 
+save_dir = args.save_path
+if dist.get_rank() == 0:
+    os.makedirs(args.save_path, exist_ok=True)
+    os.makedirs(save_dir, exist_ok=True)
+
 print(rank_batches_index)
 for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(dist.get_rank() != 0))):
     mini_batch_idx = rank_batches_index[cnt][0]
     text = list(mini_batch)
     new_row = copy.deepcopy(row)
-    new_row[0]['prompt'] = text[0]
-    new_row[0]['model'] = args.name
-    new_row[0]['prompt_source'] = args.dataset
+
+    prompt = text[0]
+    name = f'{mini_batch_idx}_{prompt}_{args.name}_{args.dataset}'
+    #new_row[0]['prompt'] = text[0]
+    #new_row[0]['model'] = args.name
+    #new_row[0]['prompt_source'] = args.dataset
 
     for it, seed in enumerate(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10)):
-        new_row[0]['seeds'] = list(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10))
+        #new_row[0]['seeds'] = list(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10))
+        name = f'{name}_{seed}.jpg'
         generator = torch.Generator().manual_seed(seed)
         image = pipe(
             text,
@@ -116,10 +125,14 @@ for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(
             num_inference_steps=args.steps,
             guidance_scale=args.w,
         ).images[0]
-        image = image2bytes(image)
-        new_row[0][f'{image}_{it+1}'] = image
+        #image = image2bytes(image)
+        #new_row[0][f'{image}_{it+1}'] = image
+        image.save(os.path.join(save_dir, name))
 
-    client.write_table(path, new_row, raw=False)
+    if dist.get_rank() == 0:
+        if cnt % 10 == 0:
+            copy_out_to_snapshot(args.save_path)
+    #client.write_table(path, new_row, raw=False)
 
 # Done.
 dist.barrier()
