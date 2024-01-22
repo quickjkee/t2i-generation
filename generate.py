@@ -105,7 +105,7 @@ for cnt, mini_batch_idx in enumerate(tqdm.tqdm(rank_batches_index, unit='batch',
     new_row[0]['prompt_source'] = args.dataset
 
     for it, seed in enumerate(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10)):
-        new_row[0]['seeds'] = [list(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10))]
+        new_row[0]['seeds'] = list(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10))
         generator = torch.Generator().manual_seed(seed)
         image = pipe(
             text,
