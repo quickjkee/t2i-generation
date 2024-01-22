@@ -124,7 +124,7 @@ for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(
             generator=generator,
             num_inference_steps=args.steps,
             guidance_scale=args.w,
-        ).images[0]
+        ).images[0].resize((512, 512))
         image = image2bytes(image)
         new_row[0][f'{image}_{it+1}'] = image
         #image.save(os.path.join(save_dir, name))
