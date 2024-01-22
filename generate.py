@@ -23,6 +23,7 @@ from models import MODELS
 import yt.wrapper as yt
 from yt.wrapper import YtClient
 
+
 def image2bytes(
     image, img_ext: str = ".png"
 ) -> bytes:
@@ -33,6 +34,11 @@ def image2bytes(
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
     _, image = cv2.imencode(img_ext, image)
     return image.tobytes()
+
+
+def get_yt_token():
+    return os.environ.get("YT_TOKEN", None)
+    
 
 parser = argparse.ArgumentParser(description='Generate images with stable diffusion')
 parser.add_argument('--steps', type=int, default=50, help='number of inference steps during sampling')
@@ -91,8 +97,12 @@ else:
 ##########################
 
 ## generate images ##
-client = YtClient(proxy="hahn")
-path = yt.TablePath("//home/yr/quickjkee/sdxl_coco", append=True, client=client)
+client = YtClient(proxy="hahn", token=get_yt_token())
+path = client.TablePath("//home/yr/quickjkee/sdxl_coco", append=True)
+if dist.rank() == 0:
+    client.create_table(path, recursive=True, ignore_existing=True)
+dist.barrier()
+
 row = [{'prompt': None, 'seeds': None, 'model': None, 'prompt_source': None,
          'image_1': None, 'image_2': None, 'image_3': None, 'image_4': None, 'image_5': None,
          'image_6': None, 'image_7': None, 'image_8': None, 'image_9': None, 'image_10': None}
@@ -106,9 +116,9 @@ for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(
     new_row[0]['prompt'] = text[0]
     new_row[0]['model'] = args.name
     new_row[0]['prompt_source'] = args.dataset
-
-    for it, seed in enumerate(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10)):
-        new_row[0]['seeds'] = list(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10))
+    new_row[0]['seeds'] = list(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10))
+    
+    for it, seed in enumerate(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10)):    
         generator = torch.Generator().manual_seed(seed)
         image = pipe(
             text,
