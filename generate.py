@@ -112,6 +112,7 @@ if len(files) > 0:
     print(f'Generation starting from {skip_iter}')
 else:
     skip_iter = -10
+    skip_iter = 799
 
 print(rank_batches_index)
 for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(dist.get_rank() != 0))):
@@ -122,6 +123,7 @@ for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(
     new_row = copy.deepcopy(row)
 
     prompt = text[0]
+    prompt.replace('/', ' ')
     name_old = f'{mini_batch_idx}_{prompt}_{args.name}_{args.dataset}_{dist.get_rank()}'
     print(mini_batch_idx, dist.get_rank())
     #new_row[0]['prompt'] = text[0]
