@@ -104,9 +104,20 @@ if dist.get_rank() == 0:
     os.makedirs(args.save_path, exist_ok=True)
     os.makedirs(save_dir, exist_ok=True)
 
+files = os.listdir(save_dir)
+if len(files) > 0:
+    first_el = [int(file.split('_')[0]) for file in files if int(file.split('_')[4]) == dist.get_rank()]
+    skip_iter = max(first_el)
+    print(f'Generation starting from {skip_iter}')
+else:
+    skip_iter = -10
+skip_iter = 799
+
 print(rank_batches_index)
 for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(dist.get_rank() != 0))):
     mini_batch_idx = rank_batches_index[cnt][0]
+    if mini_batch_idx <= skip_iter:
+        continue
     text = list(mini_batch)
     new_row = copy.deepcopy(row)
 

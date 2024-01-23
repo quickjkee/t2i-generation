@@ -11,7 +11,7 @@ def get_prompts(args):
     if args.dataset == 'coco':
         df = pd.read_csv('./prompts/coco.csv')
         all_text = list(df['caption'])
-    elif args.dataset == 'coco_train':
+    elif args.dataset == 'cocotrain':
         df = pd.read_csv('./prompts/train2014_50k.csv')
         all_text = list(df['caption'])
     elif args.dataset == 'laion':
