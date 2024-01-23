@@ -54,7 +54,7 @@ def get_t2i_model(args):
             local_path=args.local_model_path
         )
     elif args.model == 'addxl':
-        pipe = MODELS["runwayml/stable-diffusion-v1-5"](
+        pipe = MODELS["stabilityai/sdxl-turbo"](
             local_path=args.local_model_path
         )
     elif args.model == 'lcmxl':
