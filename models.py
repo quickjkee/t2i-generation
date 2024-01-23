@@ -103,7 +103,7 @@ def get_lcmxl(local_path=None):
     unet = UNet2DConditionModel.from_pretrained(local_path if local_path else "latent-consistency/lcm-sdxl",
                                                 torch_dtype=torch.float16,
                                                 variant="fp16")
-    pipe_distill = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", unet=unet,
+    pipe_distill = DiffusionPipeline.from_pretrained("sdxl-base", unet=unet,
                                                      torch_dtype=torch.float16)
 
     pipe_distill.scheduler = LCMScheduler.from_config(pipe_distill.scheduler.config)
