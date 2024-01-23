@@ -112,7 +112,6 @@ if len(files) > 0:
     print(f'Generation starting from {skip_iter}')
 else:
     skip_iter = -10
-    skip_iter = 799
 
 print(rank_batches_index)
 for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(dist.get_rank() != 0))):
