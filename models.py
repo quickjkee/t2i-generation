@@ -1,6 +1,6 @@
 import torch
 from diffusers import StableDiffusionPipeline, StableDiffusionXLPipeline, StableUnCLIPPipeline, DiffusionPipeline
-from diffusers import DDIMScheduler, DPMSolverMultistepScheduler
+from diffusers import DDIMScheduler, DPMSolverMultistepScheduler, AutoPipelineForText2Image, UNet2DConditionModel, LCMScheduler
 
 
 def get_sdxl(local_path=None, local_refiner_path=None, use_refiner=False, use_compile=True):
@@ -92,6 +92,24 @@ def get_unclip_small():
     pipe.safety_checker = None
     return pipe.to("cuda")
 
+def get_addxl(local_path=None):
+    pipe_turbo = AutoPipelineForText2Image.from_pretrained(local_path if local_path else "stabilityai/sdxl-turbo",
+                                                           torch_dtype=torch.float16,
+                                                           variant="fp16")
+    pipe_turbo.to("cuda")
+    return pipe_turbo
+
+def get_lcmxl(local_path=None):
+    unet = UNet2DConditionModel.from_pretrained(local_path if local_path else "latent-consistency/lcm-sdxl",
+                                                torch_dtype=torch.float16,
+                                                variant="fp16")
+    pipe_distill = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", unet=unet,
+                                                     torch_dtype=torch.float16)
+
+    pipe_distill.scheduler = LCMScheduler.from_config(pipe_distill.scheduler.config)
+    pipe_distill.to("cuda")
+    return pipe_distill
+
 
 def get_unclip():
     pipe = StableUnCLIPPipeline.from_pretrained(
@@ -138,5 +156,7 @@ MODELS = {
     "runwayml/stable-diffusion-v1-5": get_sd_v1,
     "stabilityai/stable-diffusion-2-1-unclip": get_unclip,
     "stabilityai/stable-diffusion-2-1-unclip-small": get_unclip_small,
+    'stabilityai/sdxl-turbo': get_addxl,
+    'latent-consistency/lcm-sdxl': get_lcmxl,
     "DeepFloyd": get_deepfloyd,
 }

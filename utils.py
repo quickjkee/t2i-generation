@@ -53,6 +53,14 @@ def get_t2i_model(args):
         pipe = MODELS["runwayml/stable-diffusion-v1-5"](
             local_path=args.local_model_path
         )
+    elif args.model == 'addxl':
+        pipe = MODELS["runwayml/stable-diffusion-v1-5"](
+            local_path=args.local_model_path
+        )
+    elif args.model == 'lcmxl':
+        pipe = MODELS["latent-consistency/lcm-sdxl"](
+            local_path=args.local_model_path
+        )
     else:
         raise Exception(f"Not found {args.model}")
 
