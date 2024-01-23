@@ -6,6 +6,7 @@ from diffusers import DDIMScheduler, DDPMScheduler, HeunDiscreteScheduler, Euler
 from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
 
 import torch
+torch.set_num_threads(10)
 import os
 import pandas as pd
 import argparse
@@ -64,7 +65,7 @@ for k, v in sorted(vars(args).items()):
 ###################
 
 all_text = get_prompts(args)
-random.shuffle(all_text)
+#random.shuffle(all_text)
 all_text = all_text[: args.max_cnt]
 pipe, refiner = get_t2i_model(args)
 
@@ -110,7 +111,8 @@ for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(
     new_row = copy.deepcopy(row)
 
     prompt = text[0]
-    name_old = f'{mini_batch_idx}_{prompt}_{args.name}_{args.dataset}'
+    name_old = f'{mini_batch_idx}_{prompt}_{args.name}_{args.dataset}_{dist.get_rank()}'
+    print(mini_batch_idx, dist.get_rank())
     #new_row[0]['prompt'] = text[0]
     #new_row[0]['model'] = args.name
     #new_row[0]['prompt_source'] = args.dataset
@@ -130,7 +132,7 @@ for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(
         image.save(os.path.join(save_dir, name))
 
     if dist.get_rank() == 0:
-        if cnt % 10 == 0:
+        if cnt % 50 == 0:
             copy_out_to_snapshot(args.save_path)
     #client.write_table(path, new_row, raw=False)
 
