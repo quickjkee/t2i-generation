@@ -1,6 +1,6 @@
 import torch
 from diffusers import StableDiffusionPipeline, StableDiffusionXLPipeline, StableUnCLIPPipeline, DiffusionPipeline
-from diffusers import DDIMScheduler, DPMSolverMultistepScheduler, UNet2DConditionModel, LCMScheduler
+from diffusers import DDIMScheduler, DPMSolverMultistepScheduler, AutoPipelineForText2Image, UNet2DConditionModel, LCMScheduler
 
 
 def get_sdxl(local_path=None, local_refiner_path=None, use_refiner=False, use_compile=True):
