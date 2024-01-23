@@ -123,7 +123,7 @@ for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(
     new_row = copy.deepcopy(row)
 
     prompt = text[0]
-    prompt = prompt.replace('/', ' ')
+    prompt = prompt.replace('/', ' ')[:20]
     name_old = f'{mini_batch_idx}_{prompt}_{args.name}_{args.dataset}_{dist.get_rank()}'
     print(mini_batch_idx, dist.get_rank())
     #new_row[0]['prompt'] = text[0]
