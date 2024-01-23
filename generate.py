@@ -103,8 +103,8 @@ save_dir = args.save_path
 if dist.get_rank() == 0:
     os.makedirs(args.save_path, exist_ok=True)
     os.makedirs(save_dir, exist_ok=True)
-
 dist.barrier()
+
 files = os.listdir(save_dir)
 if len(files) > 0:
     first_el = [int(file.split('_')[0]) for file in files if int(file.split('_')[4]) == dist.get_rank()]
@@ -112,7 +112,6 @@ if len(files) > 0:
     print(f'Generation starting from {skip_iter}')
 else:
     skip_iter = -10
-    skip_iter = 799
 
 print(rank_batches_index)
 for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(dist.get_rank() != 0))):
