@@ -104,6 +104,7 @@ if dist.get_rank() == 0:
     os.makedirs(args.save_path, exist_ok=True)
     os.makedirs(save_dir, exist_ok=True)
 
+dist.barrier()
 files = os.listdir(save_dir)
 if len(files) > 0:
     first_el = [int(file.split('_')[0]) for file in files if int(file.split('_')[4]) == dist.get_rank()]
