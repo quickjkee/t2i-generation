@@ -3,7 +3,7 @@ from diffusers import StableDiffusionPipeline, StableDiffusionXLPipeline, Stable
 from diffusers import DDIMScheduler, DPMSolverMultistepScheduler, AutoPipelineForText2Image, UNet2DConditionModel, LCMScheduler
 
 
-def get_sdxl(local_path=None, local_refiner_path=None, use_refiner=False, use_compile=True):
+def get_sdxl(local_path=None, local_refiner_path=None, use_refiner=False, use_compile=False):
     pipe = StableDiffusionXLPipeline.from_pretrained(
         local_path if local_path else "stabilityai/stable-diffusion-xl-base-1.0", 
         torch_dtype=torch.float16, variant="fp16",
@@ -35,7 +35,7 @@ def get_sdxl(local_path=None, local_refiner_path=None, use_refiner=False, use_co
         return pipe
 
 
-def get_sd_v2(local_path=None, use_compile=True):
+def get_sd_v2(local_path=None, use_compile=False):
     pipe = StableDiffusionPipeline.from_pretrained(
         local_path if local_path else "stabilityai/stable-diffusion-2-1", 
         torch_dtype=torch.float16, variant="fp16"
@@ -49,7 +49,7 @@ def get_sd_v2(local_path=None, use_compile=True):
     return pipe.to("cuda")
 
 
-def get_sd_v1(local_path=None, use_compile=True):
+def get_sd_v1(local_path=None, use_compile=False):
     pipe = StableDiffusionPipeline.from_pretrained(
         local_path if local_path else "runwayml/stable-diffusion-v1-5", 
         torch_dtype=torch.float16, variant="fp16"
