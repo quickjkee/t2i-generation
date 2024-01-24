@@ -100,15 +100,15 @@ def get_addxl(local_path=None):
     return pipe_turbo
 
 def get_lcmxl(local_path=None):
-    unet = UNet2DConditionModel.from_pretrained(local_path if local_path else "latent-consistency/lcm-sdxl",
-                                                torch_dtype=torch.float16,
-                                                variant="fp16")
-    pipe_distill = DiffusionPipeline.from_pretrained("sdxl-base", unet=unet,
-                                                     torch_dtype=torch.float16)
+    pipe = AutoPipelineForText2Image.from_pretrained('sdxl-base', torch_dtype=torch.float16, variant="fp16")
+    pipe.scheduler = LCMScheduler.from_config(pipe.scheduler.config)
+    pipe.to("cuda")
 
-    pipe_distill.scheduler = LCMScheduler.from_config(pipe_distill.scheduler.config)
-    pipe_distill.to("cuda")
-    return pipe_distill
+    # load and fuse lcm lora
+    pipe.load_lora_weights(local_path)
+    pipe.fuse_lora()
+
+    return pipe
 
 
 def get_unclip():
