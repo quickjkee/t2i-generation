@@ -105,7 +105,7 @@ def get_lcmxl(local_path=None):
     pipe.to("cuda")
 
     # load and fuse lcm lora
-    pipe.load_lora_weights(local_path)
+    pipe.load_lora_weights(pretrained_model_name_or_path_or_dict=local_path)
     pipe.fuse_lora()
 
     return pipe
