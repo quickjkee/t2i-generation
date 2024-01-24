@@ -106,7 +106,9 @@ def get_lcmxl(local_path=None):
 
     # load and fuse lcm lora
     pipe.load_lora_weights(pretrained_model_name_or_path_or_dict=local_path,
-                           weight_name='pytorch_lora_weights.safetensors')
+                           cache_dir=local_path,
+                           weight_name='pytorch_lora_weights.safetensors',
+                           local_files_only=True)
     pipe.fuse_lora()
 
     return pipe
