@@ -25,6 +25,10 @@ def get_prompts(args):
         df = pd.read_csv('./prompts/yagen_test.csv')
         all_text = list(df['prompt_en'])
         assert len(all_text) == args.max_cnt == 300
+    elif args.dataset == 'pickscore':
+        df = pd.read_csv('./prompts/pickscore_40k.csv')
+        all_text = list(df['prompt_en'])
+        assert len(all_text) == args.max_cnt == 300
     elif args.dataset == 'custom':
         df = pd.read_csv('./prompts/custom.tsv', sep='\t')
         all_text = list(df['prompt'])
