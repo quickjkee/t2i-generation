@@ -118,7 +118,7 @@ def get_dpoxl(local_path=None):
     pipe.to("cuda")
 
     unet = UNet2DConditionModel.from_pretrained(local_path,
-                                                orch_dtype=torch.float16)
+                                                torch_dtype=torch.float16)
     pipe.unet = unet
 
     return pipe
