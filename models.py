@@ -113,6 +113,16 @@ def get_lcmxl(local_path=None):
 
     return pipe
 
+def get_dpoxl(local_path=None):
+    pipe = AutoPipelineForText2Image.from_pretrained('sdxl-base', torch_dtype=torch.float16, variant="fp16")
+    pipe.to("cuda")
+
+    unet = UNet2DConditionModel.from_pretrained(local_path,
+                                                orch_dtype=torch.float16)
+    pipe.unet = unet
+
+    return pipe
+
 
 def get_unclip():
     pipe = StableUnCLIPPipeline.from_pretrained(
@@ -160,6 +170,7 @@ MODELS = {
     "stabilityai/stable-diffusion-2-1-unclip": get_unclip,
     "stabilityai/stable-diffusion-2-1-unclip-small": get_unclip_small,
     'stabilityai/sdxl-turbo': get_addxl,
+    'stabilityai/dpo-sdxl': get_dpoxl,
     'latent-consistency/lcm-sdxl': get_lcmxl,
     "DeepFloyd": get_deepfloyd,
 }
