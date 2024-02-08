@@ -9,7 +9,7 @@ from models import MODELS
 
 def get_prompts(args):
     if args.dataset == 'cocoval':
-        df = pd.read_csv('prompts/coco_val.csv')
+        df = pd.read_csv('./prompts/coco_val.csv')
         all_text = list(df['caption'])
     elif args.dataset == 'cocotrain':
         df = pd.read_csv('./prompts/train2014_50k.csv')
