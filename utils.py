@@ -8,8 +8,8 @@ from models import MODELS
 
 
 def get_prompts(args):
-    if args.dataset == 'coco':
-        df = pd.read_csv('./prompts/coco.csv')
+    if args.dataset == 'cocoval':
+        df = pd.read_csv('prompts/coco_val.csv')
         all_text = list(df['caption'])
     elif args.dataset == 'cocotrain':
         df = pd.read_csv('./prompts/train2014_50k.csv')
@@ -27,6 +27,9 @@ def get_prompts(args):
         assert len(all_text) == args.max_cnt == 300
     elif args.dataset == 'pickscore':
         df = pd.read_csv('./prompts/pickscore_40k.csv')
+        all_text = list(df['caption'])
+    elif args.dataset == 'pickscoreval':
+        df = pd.read_csv('./prompts/pickscore_val_filtered_prompts.csv')
         all_text = list(df['caption'])
     elif args.dataset == 'custom':
         df = pd.read_csv('./prompts/custom.tsv', sep='\t')

@@ -45,7 +45,7 @@ for k, v in sorted(vars(args).items()):
 # Prepare prompts #
 ###################
 if args.dataset == 'coco':
-    df = pd.read_csv('./prompts/coco.csv')
+    df = pd.read_csv('prompts/coco_val.csv')
     all_text = list(df['caption'])
 elif args.dataset == 'laion':
     df = pd.read_csv('./prompts/laion.csv')

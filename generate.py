@@ -124,7 +124,7 @@ for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(
 
     prompt = text[0]
     prompt = prompt.replace('/', ' ')[:20]
-    name_old = f'{mini_batch_idx}_{prompt}_{args.name}_{args.dataset}_{dist.get_rank()}'
+    #name_old = f'{mini_batch_idx}_{prompt}_{args.name}_{args.dataset}_{dist.get_rank()}'
     print(mini_batch_idx, dist.get_rank())
     #new_row[0]['prompt'] = text[0]
     #new_row[0]['model'] = args.name
@@ -132,7 +132,7 @@ for cnt, mini_batch in enumerate(tqdm.tqdm(rank_batches, unit='batch', disable=(
 
     for it, seed in enumerate(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10)):
         #new_row[0]['seeds'] = list(range(mini_batch_idx * 10, mini_batch_idx * 10 + 10))
-        name = f'{name_old}_{seed}.jpg'
+        name = f'{mini_batch_idx}_{seed}.jpg'
         generator = torch.Generator().manual_seed(seed)
         image = pipe(
             text,
